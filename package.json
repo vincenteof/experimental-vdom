@@ -1,0 +1,10 @@
+{
+  "name": "experimental-vdom",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "vincenteof",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.3.5"
+  }
+}
