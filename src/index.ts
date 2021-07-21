@@ -1,42 +1,22 @@
-import { Fiber } from './types'
+import { Type, ExpElement, Props, ExpChild } from './types'
 
-let nextUnitOfWork: Fiber | null = null
+export function createElement<P extends Props = Props>(
+  type: Type,
+  props: P,
+  ...children: ExpChild[]
+): ExpElement {
+  const { key, ...restProps } = props
+  const newProps: Props = restProps
 
-function workLoop() {
-  while (nextUnitOfWork !== null) {
-    nextUnitOfWork = performUnitOfWork(nextUnitOfWork)
+  if (children.length === 1) {
+    newProps.children = children[0]
+  } else if (children.length > 0) {
+    newProps.children = children
   }
-}
 
-function performUnitOfWork(workInProgress: Fiber) {
-  let next = beginWork(workInProgress)
-  if (next === null) {
-    next = completeUnitOfWork(workInProgress)
+  return {
+    type,
+    props: newProps,
+    key,
   }
-  return next
-}
-
-function beginWork(workInProgress: Fiber) {
-  return workInProgress.child
-}
-
-function completeUnitOfWork(workInProgress: Fiber) {
-  while (true) {
-    let returnFiber = workInProgress.return
-    let siblingFiber = workInProgress.sibling
-
-    nextUnitOfWork = completeWork(workInProgress)
-
-    if (siblingFiber !== null) {
-      return siblingFiber
-    } else if (returnFiber !== null) {
-      workInProgress = returnFiber
-    } else {
-      return null
-    }
-  }
-}
-
-function completeWork(workInProgress: Fiber) {
-  return null
 }
